@@ -76,9 +76,8 @@ void find_file(char* dir_name, char* file_to_find)
 	
     struct dirent* dirp;
     dirp = readdir(dp);
-	
+
     while (dirp != NULL) {
-        // if (dirp->d_type == DT_DIR && strcmp(dirp->d_name, ".") != 0 && strcmp(dirp->d_name, "..") != 0) {
         if (dirp->d_type == DT_DIR && (strcmp(dirp->d_name, ".") != 0) && (strcmp(dirp->d_name, "..") != 0)) { // Prevent going back and checking current and previous directories
 			char dir_path[128] = "";
             strcat(dir_path, dir_name); // Creating the path
