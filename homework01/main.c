@@ -38,6 +38,7 @@ int main(int argc, char** argv)
 	int cnt = 0;
 	while((dirp = readdir(dp)) != NULL) {
 		fprintf(stdout, "%d: %s", cnt, dirp->d_name);
+		// fprintf(stdout, "\t %d", DT_REG == dirp->d_type);
 		if(dirp->d_type == DT_DIR) {
 			printf("\t directory");
 		}
@@ -68,6 +69,30 @@ void usage(int argc, char** argv)
 
 void find_file(char* dir_name, char* file_to_find)
 {
-	// TODO
+    DIR* dp = opendir(dir_name);
+    if (dp == NULL) {
+        return;
+    }
+	
+    struct dirent* dirp;
+    dirp = readdir(dp);
+	
+    while (dirp != NULL) {
+        // if (dirp->d_type == DT_DIR && strcmp(dirp->d_name, ".") != 0 && strcmp(dirp->d_name, "..") != 0) {
+        if (dirp->d_type == DT_DIR && (strcmp(dirp->d_name, ".") != 0) && (strcmp(dirp->d_name, "..") != 0)) { // Prevent going back and checking current and previous directories
+			char dir_path[128] = "";
+            strcat(dir_path, dir_name); // Creating the path
+            strcat(dir_path, "/");
+            strcat(dir_path, dirp->d_name);
+            find_file(dir_path, file_to_find); // Recursion
+        }
+		else if(dirp->d_type == DT_REG){
+			if(strcmp(dirp->d_name, file_to_find) == 0){
+				printf("Found %s in %s\n", file_to_find, dir_name);
+			}
+		}
+        dirp = readdir(dp);
+    }
+    closedir(dp);
 }
 
