@@ -39,7 +39,31 @@ void usage(int argc, char** argv)
  */
 int get_num_ints(char** argv)
 {
-  /* TODO */
+    FILE *f1 = fopen(argv[1], "r");
+    FILE *f2 = fopen(argv[2], "r");
+
+    if(f1 == NULL || f2 == NULL){
+        exit(EXIT_FAILURE);
+    }
+
+    char buffer1[256];
+    char buffer2[256];
+    int lines1 = 0;
+    int lines2 = 0;
+
+    while(fgets(buffer1, sizeof(buffer1), f1)){
+        lines1++;
+    }
+    while(fgets(buffer2, sizeof(buffer2), f2)){
+        lines2++;
+    }
+    fclose(f1);
+    fclose(f2);
+    if(lines1 == lines2){
+        return lines1;
+    }else{
+        return -1;
+    }
 }
 
 
@@ -58,7 +82,9 @@ int get_num_ints(char** argv)
 void allocate_mem(unsigned int** input_one, unsigned int** input_two, 
                   unsigned long int** output, int num_ints)
 {
-  /* TODO */
+    input_one = (unsigned int **)malloc(sizeof(int *) * num_ints);
+    input_two = (unsigned int **)malloc(sizeof(int *) * num_ints);
+    output = (unsigned long int **)malloc(sizeof(int *) * num_ints);
 }
 
 
