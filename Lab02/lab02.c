@@ -43,8 +43,8 @@ char* static_data[STATIC_DATA_LENGTH] = {
 int allocate_data(char**** data, int rows, int cols);
 void free_data(char*** data, int rows, int cols);
 
-void apply_by_row(void (*func)(char*, int, int, int, int), char*** data, 
-                  int rows, int cols);
+void apply_by_row(void (*func)(char*, int, int, int, int), char*** data, int rows, int cols);
+void apply_by_col(void (*func)(char*, int, int, int, int), char*** data, int rows, int cols);
 void capitalize_first_col(char* in_str, int row, int col, int rows, int cols);
 void print_str(char* in_str, int row, int col, int rows, int cols);
 
@@ -62,6 +62,8 @@ int main(int argc, char** argv)
   
   printf("\nOriginal matrix:\n");
   apply_by_row(print_str, data, data_rows, data_cols);
+  apply_by_col(print_str, data, data_rows, data_cols);
+  apply_by_row(capitalize_first_col, data, data_rows, data_cols);
 
   // TODO: add your test calls for parts (3) and (5) here
 
@@ -158,10 +160,18 @@ void print_str(char* in_str, int row, int col, int rows, int cols)
  * changes all characters in all strings in the first column to be uppercase.
  * Hint: Not every parameter may be required
  */
-void
-capitalize_first_col(char* in_str, int row, int col, int rows, int cols)
+void capitalize_first_col(char* in_str, int row, int col, int rows, int cols)
 {
   // TODO: add your code for part (2) here
+  if(row != 0){
+    return;
+  }
+  int i = 0;
+  while(in_str[i] != 32){
+    in_str[i] -= 32;
+    i++;
+  }
+
 }
 
 
@@ -176,10 +186,15 @@ capitalize_first_col(char* in_str, int row, int col, int rows, int cols)
  *   4) the total number of rows;
  *   5) the total number of columns.
  */
-void
-apply_by_col(void (*func)(char*, int, int, int, int),
-             char*** data,
-             int rows, int cols)
+void apply_by_col(void (*func)(char*, int, int, int, int), char*** data, int rows, int cols)
 {
   // TODO: add your code for part (4) here
+  int i, j;
+  for (i = 0; i < cols; i++)
+  {
+    for (j = 0; j < rows; j++)
+    {
+      func(data[j][i], j, i, rows, cols);
+    }
+  }
 }
