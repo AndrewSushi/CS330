@@ -46,8 +46,8 @@ int get_num_ints(char** argv)
         exit(EXIT_FAILURE);
     }
 
-    char buffer1[256];
-    char buffer2[256];
+    char buffer1[MAX_NUM_LENGTH];
+    char buffer2[MAX_NUM_LENGTH];
     int lines1 = 0;
     int lines2 = 0;
 
@@ -82,9 +82,9 @@ int get_num_ints(char** argv)
 void allocate_mem(unsigned int** input_one, unsigned int** input_two, 
                   unsigned long int** output, int num_ints)
 {
-    input_one = (unsigned int **)malloc(sizeof(int *) * num_ints);
-    input_two = (unsigned int **)malloc(sizeof(int *) * num_ints);
-    output = (unsigned long int **)malloc(sizeof(int *) * num_ints);
+    *input_one = malloc(sizeof(int) * num_ints);
+    *input_two = malloc(sizeof(int) * num_ints);
+    *output = malloc(sizeof(long unsigned int) * num_ints);
 }
 
 
@@ -105,6 +105,33 @@ void get_ints(char** argv, unsigned int* input_one, unsigned int* input_two,
               unsigned long int* output, int num_ints)
 {
   /* TODO */
+    FILE *f1 = fopen(argv[1], "r");
+    FILE *f2 = fopen(argv[2], "r");
+
+    if(f1 == NULL || f2 == NULL){
+        free(input_one);
+        free(input_two);
+        free(output);
+        exit(EXIT_FAILURE);
+    }
+
+    char buffer1[MAX_NUM_LENGTH];
+    char buffer2[MAX_NUM_LENGTH];
+
+    for(int i = 0; i < num_ints; i++){
+        if(fgets(buffer1, MAX_NUM_LENGTH, f1) != NULL  && fgets(buffer2, MAX_NUM_LENGTH, f2) != NULL){
+            input_one[i] = atoi(buffer1);
+            input_two[i] = atoi(buffer2);
+        }else{
+            free(input_one);
+            free(input_two);
+            free(output);
+            exit(EXIT_FAILURE);
+        }
+    }
+    fclose(f1);
+    fclose(f2);
+
 }
 
 /* This function does an element-wise addition between the two input arrays 
@@ -122,6 +149,9 @@ void sum_ints(unsigned int* input_one, unsigned int* input_two,
               unsigned long int* output, int num_ints)
 {
   /* TODO */
+    for(int i = 0; i < num_ints; i++){
+        output[i] = (unsigned long int)input_one[i] + (unsigned long int)input_two[i];
+    }
 }
 
 /* This function saves the summed output to an output file, whose name was 
@@ -141,6 +171,12 @@ void save_output(char** argv, unsigned int* input_one, unsigned int* input_two,
                  unsigned long int* output, int num_ints)
 {
   /* TODO */
+    FILE *f3 = fopen(argv[3], "w");
+    for(int i = 0; i < num_ints; i++){
+        fprintf(f3, "%ld\n", output[i]);
+    }
+    // fwrite(output, sizeof(unsigned long int), num_ints, f3);
+    fclose(f3);
 }
 
 /* This program takes in three text file names as input. 
