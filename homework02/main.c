@@ -172,6 +172,14 @@ void save_output(char** argv, unsigned int* input_one, unsigned int* input_two,
 {
   /* TODO */
     FILE *f3 = fopen(argv[3], "w");
+
+    if(f3 == NULL){
+        free(input_one);
+        free(input_two);
+        free(output);
+        exit(EXIT_FAILURE);
+    }
+
     for(int i = 0; i < num_ints; i++){
         fprintf(f3, "%ld\n", output[i]);
     }
