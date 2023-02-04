@@ -7,6 +7,7 @@ Implementation file for the error reporting system
 *********************************************/
 
 #include <ohno.h>
+#include <stdlib.h>
 
 static struct ohno_state *state;
 
@@ -53,4 +54,17 @@ ohno_free()
 void
 ohno(const char* message, ohno_severity_t severity)
 {
+  switch(severity){
+    case OHNO_WARNING:
+      fprintf(state->out, "Warning: %s\n", message);
+      break;
+    case OHNO_SERIOUS:
+      fprintf(state->out, "Serious: %s\n", message);
+      break;
+    case OHNO_FATAL:
+      fprintf(state->out, "Fatal: %s\n", message);
+      break;
+    default:
+      fprintf(state->out, "Undocumented Error: %s\n", message);
+  }
 }

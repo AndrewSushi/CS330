@@ -37,6 +37,6 @@ lab4_dyn: src/lab4.c lib/lab4_dyn.so
 	$(CC) $(CFLAGS) -o $@ $< -llab4_dyn $(LIBS)
 
 clean:
-	rm lab4 lib/liblab4.a obj/ohno.o obj/stats.o
+	rm lab4 lab4_dyn lib/liblab4.a obj/ohno.o obj/stats.o lib/liblab4_dyn_so
 	rmdir obj
 	rmdir lib
