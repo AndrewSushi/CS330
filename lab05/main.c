@@ -68,6 +68,9 @@ int main(int argc, char **argv) {
   }
 
   // Deallocate memory
+  for(int i = 0; i < size; i++){
+    free(num[i]);
+  }
   free(num);
 
   return 0;
