@@ -148,32 +148,50 @@ void read_info(char* fileName)
     fclose(fp);
 }
 
-
-/* This function coverts a sparse matrix stored in COO format to CSR.
-   input parameters:
-       these are 'consumed' by this function
-       int*           row_ind 		row index for the non-zeros in COO
-       int*           col_ind		column index for the non-zeros in COO
-       double*        val		values for the non-zeros in COO
-       int            m			# of rows in the matrix
-       int            n			# of columns in the matrix
-       int            nnz		# of non-zeros in the matrix
-
-       these are 'produced' by this function
-       unsigned int** csr_row_ptr	row pointers to csr_col_ind and 
-                                        csr_vals in CSR 
-       unsigned int** csr_col_ind	column index for the non-zeros in CSR
-       double**       csr_vals		values for the non-zeros in CSR
-   return parameters:
-       none
- */
 void convert_coo_to_csr(int* row_ind, int* col_ind, double* val, 
                         int m, int n, int nnz,
                         unsigned int** csr_row_ptr, unsigned int** csr_col_ind,
                         double** csr_vals)
-
 {
-  /* TODO */
+    unsigned int* row_ptr_;
+    unsigned int* col_ind_;
+    double* vals_;
+    
+    row_ptr_ = (unsigned int*) malloc(sizeof(unsigned int) * (m + 1)); 
+    col_ind_ = (unsigned int*) malloc(sizeof(unsigned int) * nnz);
+    vals_ = (double*) malloc(sizeof(double) * nnz);
+
+    unsigned int* temp = malloc(sizeof(unsigned int) * m);
+    memset(temp, 0, sizeof(unsigned int) * m);
+
+    for(unsigned int i = 0; i < nnz; i++) {
+        temp[row_ind[i] - 1]++;
+    }
+
+    for(unsigned int i = 1; i < m; i++) {
+        temp[i] += temp[i - 1];
+    }
+
+    row_ptr_[0] = 0; 
+    for(unsigned int i = 0; i < m; i++) {
+        row_ptr_[i + 1] = temp[i];
+    }
+
+    unsigned int* tmp_row_ptr = (unsigned int*) malloc(sizeof(unsigned int) * m);
+    memcpy(tmp_row_ptr, row_ptr_, sizeof(unsigned int) * m);
+
+    for(unsigned int i = 0; i < nnz; i++)  {
+        col_ind_[tmp_row_ptr[row_ind[i] - 1]] = col_ind[i] - 1;
+        vals_[tmp_row_ptr[row_ind[i] - 1]] = val[i];
+        tmp_row_ptr[row_ind[i] - 1]++;
+    }
+
+    *csr_row_ptr = row_ptr_;
+    *csr_col_ind = col_ind_;
+    *csr_vals = vals_;
+
+    free(tmp_row_ptr);
+    free(temp);
 }
 
 /* This function reads in a vector from a text file, similar in format to
@@ -244,7 +262,17 @@ void spmv(unsigned int* csr_row_ptr, unsigned int* csr_col_ind,
           double* csr_vals, int m, int n, int nnz, 
           double* vector_x, double* res)
 {
-  /* TODO */
+    for(int i = 0; i < m; i++){
+        res[i] = 0.0;
+    }
+    for(unsigned int i = 0; i < m; i++){
+        unsigned int row_start = csr_row_ptr[i];
+        unsigned int row_end = csr_row_ptr[i + 1];
+        for(unsigned int j = row_start; j < row_end; j++){
+            res[i] += csr_vals[j] * vector_x[csr_col_ind[j]];
+        }
+    }
+
 }
 
 
