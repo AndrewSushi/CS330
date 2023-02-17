@@ -157,6 +157,14 @@ void construct_adj_list(int** adj_mat, int rows, int cols, adj_node_t*** list)
     // INSERT YOUR CODE HERE
     // HINT: You will need to use create_node() and add_node() here
     // Go through each vertex and construct its adjacency list
+    for(int i = 0; i < rows; i++){
+        for(int j = 0; j < cols; j++){
+            if(adj_mat[i][j]){
+                adj_node_t *temp = create_node(j);
+                add_node(myList, i, temp);
+            }
+        }
+    }
 
     fprintf(stdout, "done\n");
 }
@@ -261,24 +269,46 @@ void bfs(adj_node_t** list, int rows, int source,
 
     // INSERT YOUR CODE HERE
 
-    // Initialize the vertices
-    // color should be initialized to 0
-    // distance should be initialized to -1 for infinity
-    // parent should be initialized to -1 for NIL
+    for(int i = 0; i < rows; i++){
+        color[i] = 0;
+        distance[i] = -1;
+        parent[i] = -1;
+    }
+    color[source] = 1;
+    distance[source] = 0;
+    parent[source] = -1;
 
-    // Initialize the source vertex
-    // distance for the source vertex is 0, so it should be initialized as such
-    // it has no parent, so initialize it to -1
-    // color should be initialized to 1
+    adj_node_t **queue = NULL;
+    int q_size = 0;
+    init_adj_list(&queue, rows);
 
-    // Initialize the queue with the source vertex
-    // HINT: use create_node(source) and add_node
+    adj_node_t *head = create_node(source);
+    add_node(queue, 0, head);
+    q_size++;
 
-    // bfs iteration
-    // HINT: use remove_node (to fetch & dequeu the vertex)
-    // HINT: you will also need create_node an add_node here
+    while (q_size != 0) {
+        int u = remove_node(queue);
+        q_size--;
 
-   fprintf(stdout, "done\n");
+        adj_node_t* v = list[u];
+
+        while(v != NULL) {
+            if (color[v->vid] == 0) {
+            color[v->vid] = 1;
+            distance[v->vid] = distance[u] + 1;
+            parent[v->vid] = u;
+
+            adj_node_t *v_node = create_node(v->vid);
+            add_node(queue, 0, v_node);
+            q_size++;
+        }
+        v = v->next;
+        }
+        color[u] = 2;
+    }
+    free_adj_list(queue, rows);
+
+    fprintf(stdout, "done\n");
 
     #if DEBUG
         print_bfs_result(rows, color, distance, parent);

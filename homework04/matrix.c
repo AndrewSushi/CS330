@@ -88,12 +88,12 @@ void matrix_transpose(int** dst, int** src, int rows, int cols)
     assert(rows == cols);
 
     // INSERT YOUR CODE HERE
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            dst[j][i] = src[i][j];
+        }
+    }
 }
-
-
-
-
-
 
 /* This function 'resets a vetor to have all
    zero value
@@ -172,41 +172,60 @@ void bfs_spmv(int** int_array, int rows, int cols, int source,
     assert(res);
     reset_vector(res, cols);
 
-
     int iter = 1;
     int done = 0;
     int *src = vec;
     int *dst = res;
 
-    // Do BFS until done
     while(!done) {
-        // INSERT YOUR CODE HERE
-
-        // given a vector of source vetices, find the neighbors
-        // HINT: spmv 
-
-        // color the source vertices for this iteration `black'
-
-        // store the distance for the newly discovered neighbors
-
-        // Before we begin, eliminate vertices that have already been visited
-
-        // Check to see if no neighbors were found,
-        // in which case, we are done
-
-        // iter is equivalent to each `breadth' searched (i.e., distance from
-        // the source vertex)
+        int neighbor_idx = 0;
+        int i, j;
+        reset_vector(dst, cols);
+        for (i = 0; i < cols; i++) {
+            if (src[i] == 1) {
+                for (int j = 0; j < rows; j++) {
+                    int neighbor = mat_trans[j][i] * src[i];
+                    if (neighbor) {
+                        neighbor_idx = 1;
+                        dst[j] = 1;
+                    }
+                }
+            }
+        }
+        for (i = 0; i < rows; i++) {
+            if (dst[i] == 1)
+            color[i] = 2;
+        }
+        for (i = 0; i < rows; i++) {
+            if (dst[i] == 1){
+                distance[i] = iter; 
+            }
+        }
+        for (i = 0; i < rows; i++) {
+            int temp = dst[i];
+            src[i] = temp;
+        }
+        for (i = 0; i < rows; i++) {
+            if (color[i] == 2) {
+                for (j = 0; j < cols; j++) {
+                    mat_trans[i][j] = 0;
+                }
+            }
+        }
+        if (!neighbor_idx){
+            done = 1;
+        }
+        iter++;
     }
-
-    fprintf(stdout, "done\n");
-
-    #if DEBUG
-        print_bfs_matrix_result(rows, color, distance);
-    #endif
 
     free_2d_array(mat_trans, cols);
     free(vec);
     free(res);
+
+    fprintf(stdout, "done\n");
+    #if DEBUG
+        print_bfs_matrix_result(rows, color, distance);
+    #endif
 }
 
 
