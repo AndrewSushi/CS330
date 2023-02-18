@@ -91,6 +91,9 @@ class ToUpper : public Filter
 // character lowercase
 //
 
+class ToLower : public Filter{
+  char FilterLetter(char ch){ return tolower(ch); }
+};
 
 
 //
@@ -111,6 +114,17 @@ shift_cypher(char ch, int offset)
 // be handed to shift_cypher when the filter is executed.
 //
 
+class Encrypt : public Filter{
+  // int offset;
+  // Encrypt(char c, int n){
+  //   offset = n;
+  // }
+  char FilterLetter(char ch) {return shift_cypher(ch, offset); }
+  public:
+    Encrypt(int shift_offset){offset = shift_offset; }
+  private:
+    int offset;
+};
 
 
 //
@@ -120,7 +134,10 @@ shift_cypher(char ch, int offset)
 Filter *
 getFilter()
 {
-  return new ToUpper();
+  // return new Filter();
+  // return new ToUpper();
+  // return new ToLower();
+  return new Encrypt(13);
 }
 
 //
