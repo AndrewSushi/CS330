@@ -193,19 +193,11 @@ void bfs_spmv(int** int_array, int rows, int cols, int source,
             }
         }
         for (i = 0; i < rows; i++) {
-            if (dst[i] == 1)
-            color[i] = 2;
-        }
-        for (i = 0; i < rows; i++) {
             if (dst[i] == 1){
+                color[i] = 2;
                 distance[i] = iter; 
             }
-        }
-        for (i = 0; i < rows; i++) {
-            int temp = dst[i];
-            src[i] = temp;
-        }
-        for (i = 0; i < rows; i++) {
+            src[i] = dst[i];
             if (color[i] == 2) {
                 for (j = 0; j < cols; j++) {
                     mat_trans[i][j] = 0;
