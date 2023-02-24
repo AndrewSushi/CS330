@@ -39,6 +39,15 @@ bool Response::checkAndRespond(const string& inWord, ostream& toWhere)
     // input message (inWord), and send the proper response to the toWhere
     // output stream
     // String class provides the function 'find' which you might find useful
+    
+    size_t pos = inWord.find(this->keyword.upper());
+    if(pos != string::npos){
+      this->respond(toWhere);
+      return 1;
+    }
+    return 0;
+
+    
 }
 
 void Response::respond(ostream& toWhere)
@@ -47,6 +56,7 @@ void Response::respond(ostream& toWhere)
     // This method should 'insert' "I am neither angry nor happy: " followed by
     // the object's response word to the toWhere output stream, along with
     // a newline at the end
+    toWhere << "I am neither angry nor happy: " << this->response << endl;
 }
 
 
@@ -56,6 +66,7 @@ void AngryResponse::respond(ostream& toWhere)
   // Implement the 'respond' member function for the AngryResponse class so that
   // the angry rseponse "I am angry: " followed by the object's response word 
   // is inserted to the toWhere output stream, along with a newline at the end
+  toWhere << "I am angry: " << this->response << endl;
 }
 
 
@@ -67,3 +78,6 @@ void AngryResponse::respond(ostream& toWhere)
 // the happy rseponse "I am happy: " followed by the object's response word 
 // is inserted to the toWhere output stream, along with a newline at the end
 
+void HappyResponse::respond(ostream& toWhere){
+  toWhere << "I am happy: " << this->response << endl;
+}
