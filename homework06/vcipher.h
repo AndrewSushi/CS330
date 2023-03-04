@@ -9,5 +9,17 @@ using namespace std;
    Vigenere cipher class. It 
    inherts KCipher */
 // TODO: Implement this class
+
+class VigenereCipher: RunningKeyCipher{
+public:
+   VigenereCipher();
+   VigenereCipher(string key);
+   virtual ~VigenereCipher(){};
+   string encrypt(string raw) override;
+   string decrypt(string enc) override;
+private:
+   string key;
+};
+
 #endif
 

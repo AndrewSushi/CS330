@@ -8,5 +8,14 @@ using namespace std;
    ROT13 cipher class. It 
    inherts class CCipher */
 // TODO: Implement this class
+
+class ROT13Cipher: CaesarCipher{
+public:
+   ROT13Cipher();
+   ~ROT13Cipher();
+private:
+   int offset = 13;
+};
+
 #endif
 

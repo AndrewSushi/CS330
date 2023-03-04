@@ -11,5 +11,20 @@ const unsigned int MAX_LENGTH = 100;
    Running key cipher class. It 
    inherts class Cipher */
 // TODO: Implement this function
+
+class RunningKeyCipher: CaesarCipher{
+public:
+   RunningKeyCipher();
+   RunningKeyCipher(int offset, string key);
+   virtual ~RunningKeyCipher() {}
+   string encrypt(string raw) override;
+   string decrypt(string enc) override;
+private:
+   string key;
+   int offset;
+   string padKey(string key, int length);
+   string applyRunningKey(string message, string key, int direction);
+};
+
 #endif
 
