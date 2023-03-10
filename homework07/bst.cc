@@ -56,7 +56,8 @@ Node* Node::get_right()
 
 void Node::print_info(ostream& to)
 {
-    to << key << endl;
+    // to << key << endl;
+    to << key;
 }
 // ---------------------------------------
 
@@ -294,3 +295,4 @@ Node* BST::tree_search(int search_key)
 
     return tmp;
 }
+// ---------------------------------------

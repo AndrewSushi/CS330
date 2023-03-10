@@ -2,12 +2,12 @@
 // ---------------------------------------------
 // SNode class
 // Default constructor
-SNode::SNode() : Node(this->num_students++)
-{
-    this->first = "George";
-    this->last = "Burdell";
-    this->age = 100;
-}
+// SNode::SNode() : Node(this->num_students++)
+// {
+//     this->first = "George";
+//     this->last = "Burdell";
+//     this->age = 100;
+// }
 // Constructor
 SNode::SNode(string f_, string l_, unsigned int a_) 
        : Node(this->num_students++) 
